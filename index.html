@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Melek Yaz'ın Harfli Melodisi 🎵</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink: #ff8fab;
+  --orange: #fb923c;
+  --purple: #a78bfa;
+  --blue: #60a5fa;
+  --green: #4ade80;
+  --yellow: #fde047;
+  --card-bg: rgba(255,255,255,0.94);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Nunito',sans-serif;
+  min-height:100vh;
+  background: linear-gradient(180deg,#87CEEB 0%,#c8f0b0 75%,#7ec850 100%);
+  overflow-x:hidden;
+}
+.cloud { position:fixed; background:white; border-radius:50px; opacity:0.82; pointer-events:none; }
+.cloud::before,.cloud::after { content:''; position:absolute; background:white; border-radius:50%; }
+.c1{width:130px;height:42px;top:5%;left:3%;animation:drift 18s linear infinite;}
+.c1::before{width:64px;height:64px;top:-32px;left:16px;}
+.c1::after{width:44px;height:44px;top:-22px;left:54px;}
+.c2{width:96px;height:32px;top:12%;right:6%;animation:drift 24s linear infinite reverse;}
+.c2::before{width:48px;height:48px;top:-24px;left:12px;}
+.c2::after{width:32px;height:32px;top:-16px;left:42px;}
+.c3{width:74px;height:26px;top:3%;left:44%;animation:drift 21s linear infinite;}
+.c3::before{width:38px;height:38px;top:-19px;left:9px;}
+.c3::after{width:26px;height:26px;top:-13px;left:32px;}
+.c4{width:55px;height:20px;top:18%;left:22%;animation:drift 15s linear infinite reverse;}
+.c4::before{width:28px;height:28px;top:-14px;left:7px;}
+.c4::after{width:20px;height:20px;top:-10px;left:24px;}
+@keyframes drift{from{transform:translateX(-15px)}to{transform:translateX(15px)}}
+
+.game-container {
+  display:flex; flex-direction:column; align-items:center;
+  padding:18px 14px 48px; position:relative; z-index:1; min-height:100vh;
+}
+
+.header { text-align:center; margin-bottom:10px; animation:slideDown 0.6s ease-out; }
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.title {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(26px,6.5vw,46px);
+  color:white;
+  text-shadow:3px 3px 0 rgba(0,0,0,0.15);
+  letter-spacing:1px; line-height:1.1;
+}
+.player-name {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(15px,3.8vw,21px);
+  color:rgba(255,255,255,0.97);
+  background:rgba(255,255,255,0.22);
+  border-radius:50px; padding:4px 20px;
+  display:inline-block; margin-top:6px;
+  letter-spacing:1px; border:2px solid rgba(255,255,255,0.45);
+}
+.notes-row{display:inline-flex;gap:5px;margin-left:6px;vertical-align:middle;}
+.note{display:inline-block;font-size:20px;animation:noteBob 1.2s ease-in-out infinite alternate;}
+.note:nth-child(2){animation-delay:0.3s;} .note:nth-child(3){animation-delay:0.6s;}
+@keyframes noteBob{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-6px) rotate(5deg)}}
+
+.group-tabs{display:flex;gap:8px;margin:10px 0 12px;flex-wrap:wrap;justify-content:center;}
+.tab {
+  font-family:'Fredoka One',cursive; font-size:17px;
+  padding:8px 16px; border-radius:50px;
+  border:3px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.28); color:white;
+  cursor:pointer; transition:all 0.22s;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1); white-space:nowrap;
+}
+.tab:hover{transform:scale(1.06);}
+.tab.active-sh{background:#ff8fab;border-color:#ff5c8a;transform:scale(1.1);box-shadow:0 5px 18px rgba(255,92,138,0.45);}
+.tab.active-ch{background:#fb923c;border-color:#ea6c0a;transform:scale(1.1);box-shadow:0 5px 18px rgba(251,146,60,0.45);}
+.tab.active-gh{background:#a78bfa;border-color:#7c3aed;transform:scale(1.1);box-shadow:0 5px 18px rgba(167,139,250,0.45);}
+.tab-count{font-size:11px;background:rgba(255,255,255,0.3);border-radius:50px;padding:1px 7px;margin-left:4px;}
+
+.card {
+  background:var(--card-bg); border-radius:30px;
+  padding:20px 22px; width:100%; max-width:440px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.14),0 2px 8px rgba(0,0,0,0.07);
+  animation:fadeIn 0.6s ease-out 0.2s both; position:relative; overflow:hidden;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:6px;
+  background:linear-gradient(90deg,#ff8fab,#fb923c,#fde047,#4ade80,#60a5fa,#a78bfa);
+  border-radius:30px 30px 0 0;
+}
+.streak-badge {
+  display:none; position:absolute; top:-2px; right:16px;
+  background:linear-gradient(135deg,#fde047,#fb923c);
+  font-family:'Fredoka One',cursive; font-size:12px; color:white;
+  padding:5px 12px; border-radius:0 0 12px 12px;
+  box-shadow:0 3px 10px rgba(251,146,60,0.5); z-index:2;
+}
+.streak-badge.show{display:block;}
+
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;margin-top:4px;}
+.score-pill{font-family:'Fredoka One',cursive;font-size:17px;background:#fef9c3;color:#854d0e;border-radius:50px;padding:5px 14px;border:2px solid #fde047;}
+.level-pill{font-size:12px;font-weight:800;color:#6b7280;background:#f3f4f6;border-radius:50px;padding:5px 12px;border:1.5px solid #e5e7eb;text-transform:uppercase;letter-spacing:0.5px;}
+
+.progress-row{display:flex;gap:5px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
+.dot{width:11px;height:11px;border-radius:50%;background:#e5e7eb;border:2px solid #d1d5db;transition:all 0.3s;}
+.dot.done-sh{background:#ff8fab;border-color:#ff5c8a;}
+.dot.done-ch{background:#fb923c;border-color:#ea6c0a;}
+.dot.done-gh{background:#a78bfa;border-color:#7c3aed;}
+.dot.current{background:#60a5fa;border-color:#3b82f6;transform:scale(1.35);}
+
+.char-area{text-align:center;margin-bottom:8px;}
+.char-btn {
+  background:none; border:none; cursor:pointer;
+  font-size:clamp(62px,15vw,88px);
+  display:inline-block; line-height:1;
+  filter:drop-shadow(2px 4px 6px rgba(0,0,0,0.13));
+  animation:floatChar 3s ease-in-out infinite; transition:transform 0.15s;
+}
+.char-btn:active{transform:scale(0.9);}
+@keyframes floatChar{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.char-btn.wiggle{animation:charWiggle 0.5s ease-in-out;}
+@keyframes charWiggle{0%,100%{transform:rotate(0) scale(1)}20%{transform:rotate(-13deg) scale(1.1)}60%{transform:rotate(13deg) scale(1.1)}80%{transform:rotate(-6deg) scale(1.05)}}
+.char-btn.celebrate{animation:charCelebrate 0.65s ease-in-out;}
+@keyframes charCelebrate{0%{transform:scale(1)}30%{transform:scale(1.35) rotate(-5deg)}65%{transform:scale(1.35) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.play-hint{font-size:11px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
+
+.word-display {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(28px,8.5vw,46px);
+  letter-spacing:5px; text-align:center; color:#1f2937;
+  margin-bottom:4px; min-height:54px;
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
+}
+.letter-sh{color:#ff5c8a;} .letter-ch{color:#ea6c0a;} .letter-gh{color:#7c3aed;}
+
+.hint-text{font-size:14px;color:#6b7280;text-align:center;font-weight:700;margin-bottom:10px;min-height:20px;}
+.stars-row{text-align:center;font-size:24px;min-height:30px;margin-bottom:8px;letter-spacing:3px;}
+
+.encourage-bar {
+  border-radius:14px; padding:8px 14px; text-align:center;
+  font-size:14px; font-weight:800; margin-bottom:10px; min-height:36px;
+  display:flex; align-items:center; justify-content:center; transition:all 0.3s;
+  background:linear-gradient(135deg,#fef3c7,#fde68a);
+  border:2px solid #fde047; color:#92400e;
+}
+.encourage-bar.ok{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-color:#4ade80;color:#166534;}
+.encourage-bar.retry{background:linear-gradient(135deg,#fff1f2,#fecdd3);border-color:#fca5a5;color:#991b1b;}
+.encourage-bar.listening{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-color:#60a5fa;color:#1e40af;}
+
+.mic-section{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:14px;}
+.mic-label{font-size:13px;font-weight:800;color:#374151;text-transform:uppercase;letter-spacing:0.5px;}
+.mic-btn {
+  width:80px;height:80px;border-radius:50%;border:none;cursor:pointer;
+  font-size:30px;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;background:#dbeafe;
+  box-shadow:0 6px 20px rgba(96,165,250,0.35);
+}
+.mic-btn:hover{transform:scale(1.06);} .mic-btn:active{transform:scale(0.93);}
+.mic-btn.listening{background:#fee2e2;animation:micPulse 1s ease-in-out infinite;}
+@keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(248,113,113,0.5)}70%{box-shadow:0 0 0 18px rgba(248,113,113,0)}100%{box-shadow:0 0 0 0 rgba(248,113,113,0)}}
+.mic-btn.success{background:#dcfce7;box-shadow:0 6px 20px rgba(74,222,128,0.4);}
+.status-text{font-size:13px;font-weight:700;color:#4b5563;min-height:18px;text-align:center;}
+.status-text.ok{color:#16a34a;} .status-text.retry{color:#dc2626;}
+
+.nav-row{display:flex;gap:10px;justify-content:center;}
+.nav-btn{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;padding:11px 22px;border-radius:50px;border:none;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.nav-btn:active{transform:scale(0.95);}
+.btn-prev{background:#f3f4f6;color:#374151;} .btn-prev:hover{background:#e5e7eb;}
+.btn-next{background:linear-gradient(135deg,#60a5fa,#818cf8);color:white;box-shadow:0 4px 16px rgba(96,165,250,0.45);}
+.btn-next:hover{transform:scale(1.05);}
+
+.no-speech{display:none;background:#fff3cd;border:2px solid #ffc107;border-radius:14px;padding:10px 14px;font-size:12px;font-weight:700;color:#856404;text-align:center;margin-top:6px;max-width:400px;}
+
+.celeb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;flex-direction:column;}
+.celeb-overlay.show{display:flex;}
+.celeb-card{background:white;border-radius:32px;padding:34px 42px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);max-width:360px;width:90%;}
+@keyframes popIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.celeb-emoji{font-size:70px;display:block;margin-bottom:8px;}
+.celeb-title{font-family:'Fredoka One',cursive;font-size:30px;color:#1f2937;margin-bottom:4px;}
+.celeb-name{font-family:'Fredoka One',cursive;font-size:22px;color:#ff5c8a;margin-bottom:8px;}
+.celeb-sub{font-size:15px;color:#6b7280;font-weight:700;margin-bottom:22px;line-height:1.6;}
+.celeb-btn{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;padding:13px 34px;border-radius:50px;border:none;cursor:pointer;background:linear-gradient(135deg,#60a5fa,#818cf8);color:white;box-shadow:0 6px 20px rgba(96,165,250,0.45);transition:transform 0.2s;}
+.celeb-btn:hover{transform:scale(1.05);}
+
+canvas#cc{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99;}
+@media(max-width:400px){.card{padding:16px 13px;border-radius:22px;}.tab{font-size:14px;padding:7px 12px;}.mic-btn{width:70px;height:70px;}}
+</style>
+</head>
+<body>
+<canvas id="cc"></canvas>
+<div class="cloud c1"></div><div class="cloud c2"></div>
+<div class="cloud c3"></div><div class="cloud c4"></div>
+
+<div class="celeb-overlay" id="celebOverlay">
+  <div class="celeb-card">
+    <span class="celeb-emoji">🏆</span>
+    <div class="celeb-title">Tebrikler!</div>
+    <div class="celeb-name">⭐ Melek Yaz ⭐</div>
+    <div class="celeb-sub">Tüm kelimeleri başardın!<br>Sen gerçek bir şampiyonsun! 🎉<br>Annen ve baban seninle çok gurur duyuyor!</div>
+    <button class="celeb-btn" onclick="restartGame()">Tekrar Oyna 🎵</button>
+  </div>
+</div>
+
+<div class="game-container">
+  <div class="header">
+    <div class="title">
+      Harfli Melodi
+      <span class="notes-row"><span class="note">🎵</span><span class="note">🎶</span><span class="note">🎵</span></span>
+    </div>
+    <div class="player-name">⭐ Melek Yaz'ın Oyunu ⭐</div>
+  </div>
+
+  <div class="group-tabs">
+    <div class="tab active-sh" id="tab-sh" onclick="setGroup('sh')">Ş harfi <span class="tab-count" id="tc-sh"></span></div>
+    <div class="tab" id="tab-ch" onclick="setGroup('ch')">Ç harfi <span class="tab-count" id="tc-ch"></span></div>
+    <div class="tab" id="tab-gh" onclick="setGroup('gh')">Ğ harfi <span class="tab-count" id="tc-gh"></span></div>
+  </div>
+
+  <div class="card">
+    <div class="streak-badge" id="streakBadge">🔥 Süper gidiyorsun!</div>
+    <div class="top-bar">
+      <div class="score-pill" id="totalScore">0 ⭐</div>
+      <div class="level-pill" id="levelPill">1 / ?</div>
+    </div>
+    <div class="progress-row" id="progressRow"></div>
+    <div class="char-area">
+      <button class="char-btn" id="charBtn" onclick="playMelody()">🍬</button>
+      <div class="play-hint">👆 Karaktere bas — sesini duy!</div>
+    </div>
+    <div class="word-display" id="wordDisplay"></div>
+    <div class="hint-text" id="hintText"></div>
+    <div class="stars-row" id="starsRow"></div>
+    <div class="encourage-bar" id="encourageBar">Hazır mısın, Melek Yaz? 😊</div>
+    <div class="mic-section">
+      <div class="mic-label" id="micLabel">Söyle bakalım!</div>
+      <button class="mic-btn" id="micBtn" onclick="startListening()">🎤</button>
+      <div class="status-text" id="statusText"></div>
+    </div>
+    <div class="no-speech" id="noSpeechWarn">⚠️ Tarayıcın mikrofonu desteklemiyor. Lütfen Chrome veya Edge kullan!</div>
+    <div class="nav-row">
+      <button class="nav-btn btn-prev" onclick="prevWord()">◀ Geri</button>
+      <button class="nav-btn btn-next" onclick="nextWord()">İleri ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CHILD = 'Melek Yaz';
+
+const encourageOk = [
+  `Süpersin ${CHILD}! 🌟`,
+  `Bravo! Harika söyledin! 🎉`,
+  `Mükemmelsin ${CHILD}! 🏆`,
+  `Vay canına! Çok güzel! 🌈`,
+  `İşte bu kadar iyi! 👏`,
+  `Sen bir yıldızsın! ⭐`,
+  `Harika! Devam et! 🚀`,
+  `Aferin ${CHILD}! Çok iyi! 🎵`,
+  `Bravo bravo! Müthişsin! 🥳`,
+  `Elinize sağlık! Çok güzel! 🌸`,
+];
+
+const encourageRetry = [
+  `Neredeyse! Bir daha dene ${CHILD}! 💪`,
+  `Çok yaklaştın! Tekrar söyle! 🌸`,
+  `Olmaz olmaz! Yapabilirsin! 😊`,
+  `Hemen hemen! Devam et! 🌟`,
+  `Sen yapabilirsin ${CHILD}! 💫`,
+  `Bir daha, daha güzel olacak! 🎶`,
+  `Pes etme, az kaldı! 🌈`,
+];
+
+const words = {
+  sh: [
+    {word:"ŞEKER",    char:"🍬", hint:"Tatlı tatlı!"},
+    {word:"ŞEMSİYE",  char:"☂️",  hint:"Yağmurdan korur!"},
+    {word:"ŞAPKA",    char:"🎩", hint:"Kafaya giyilir!"},
+    {word:"YAŞLI",    char:"👴", hint:"Büyükanne ve büyükbaba!"},
+    {word:"AŞÇI",     char:"👨‍🍳", hint:"Yemek pişirir!"},
+    {word:"EŞYA",     char:"📦", hint:"Odadaki şeyler!"},
+    {word:"VİŞNE",    char:"🍒", hint:"Kırmızı küçük meyve!"},
+    {word:"DİŞÇİ",    char:"🦷", hint:"Dişleri sağlıklı tutar!"},
+    {word:"KIŞLIK",   char:"🧥", hint:"Kışın giyilir!"},
+    {word:"YARIŞÇI",  char:"🏃", hint:"Koşu yarışına girer!"},
+    {word:"GÜREŞ",    char:"🤼", hint:"Bir spor türü!"},
+    {word:"YARIŞ",    char:"🏁", hint:"Kim önce bitirir?"},
+    {word:"DİŞ",      char:"🦷", hint:"Ağzımızdaki beyaz şey!"},
+    {word:"BAYKUŞ",   char:"🦉", hint:"Geceleri uçar!"},
+    {word:"KURUŞ",    char:"💰", hint:"Küçük para birimi!"},
+    {word:"YOKUŞ",    char:"⛰️",  hint:"Yukarı çıkan yol!"},
+    {word:"BOŞ",      char:"📭", hint:"İçinde hiçbir şey yok!"},
+    {word:"MAŞA",     char:"🔥", hint:"Ateşte kullanılır!"},
+    {word:"AKŞAM",    char:"🌆", hint:"Günün sonu!"},
+    {word:"IŞIK",     char:"💡", hint:"Karanlığı aydınlatır!"},
+    {word:"KAŞIK",    char:"🥄", hint:"Çorba içeriz!"},
+    {word:"EŞOFMAN",  char:"👕", hint:"Spor kıyafeti!"},
+    {word:"KOŞU",     char:"🏃", hint:"Hızlı hızlı koşmak!"},
+    {word:"TURŞU",    char:"🥒", hint:"Ekşi ekşi sebze!"},
+    {word:"GİŞE",     char:"🎫", hint:"Bilet alınan yer!"},
+    {word:"KÖŞE",     char:"📐", hint:"Duvarların birleştiği yer!"},
+    {word:"FİŞEK",    char:"🎆", hint:"Patlar ve ışık saçar!"},
+    {word:"POŞET",    char:"🛍️", hint:"Alışverişte kullanılır!"},
+    {word:"EKŞİ",     char:"🍋", hint:"Limon gibi!"},
+    {word:"BEŞİK",    char:"🛏️", hint:"Bebek orada uyur!"},
+    {word:"TİŞÖRT",   char:"👕", hint:"Yazın giyeriz!"},
+    {word:"PARAŞÜT",  char:"🪂", hint:"Gökten yavaş iner!"},
+    {word:"KAŞ",      char:"😮", hint:"Gözlerin üstünde!"},
+    {word:"ŞELALE",   char:"🌊", hint:"Şırıl şırıl akar!"},
+  ],
+  ch: [
+    {word:"ÇİÇEK",    char:"🌸", hint:"Bahçede açar!"},
+    {word:"ÇANTA",    char:"👜", hint:"İçine eşya koyulur!"},
+    {word:"ÇORAP",    char:"🧦", hint:"Ayağa giyilir!"},
+    {word:"ÇILEK",    char:"🍓", hint:"Kırmızı ve tatlı!"},
+    {word:"ÇORBA",    char:"🍲", hint:"Kaşıkla içeriz!"},
+    {word:"ÇOCUK",    char:"👧", hint:"Küçük insan!"},
+    {word:"ÇATAL",    char:"🍴", hint:"Yemekte kullanırız!"},
+    {word:"ÇEŞME",    char:"⛲", hint:"Suyu oradan içeriz!"},
+    {word:"ÇAMAŞIR",  char:"👚", hint:"Yıkanan kıyafetler!"},
+    {word:"ÇARŞI",    char:"🏪", hint:"Alışveriş yeri!"},
+    {word:"ÇUBUK",    char:"🥢", hint:"İnce uzun şey!"},
+    {word:"ÇELİK",    char:"⚙️",  hint:"Sert metal!"},
+    {word:"ÇEVRE",    char:"🌱", hint:"Etrafımızdaki doğa!"},
+    {word:"ÇARŞAF",   char:"🛏️", hint:"Yatakta kullanılır!"},
+    {word:"ÇIĞLIK",   char:"😱", hint:"Çok yüksek ses!"},
+  ],
+  gh: [
+    {word:"AĞAÇ",     char:"🌳", hint:"Ormanda büyür!"},
+    {word:"YOĞURT",   char:"🥛", hint:"Lezzetli ve sağlıklı!"},
+    {word:"BAĞLAMA",  char:"🎸", hint:"Türk müziği çalgısı!"},
+    {word:"ÖĞRETMEN", char:"👩‍🏫", hint:"Bize öğretir!"},
+    {word:"EĞLENCE",  char:"🎡", hint:"Çok eğleniriz!"},
+    {word:"AĞLAMAK",  char:"😢", hint:"Gözyaşı dökmek!"},
+    {word:"YAĞMUR",   char:"🌧️",  hint:"Gökten yağar!"},
+    {word:"UĞRAMAK",  char:"🚪", hint:"Bir yere uğrarız!"},
+    {word:"SOĞUK",    char:"🥶", hint:"Kışın havası!"},
+    {word:"DAĞLARCA", char:"⛰️",  hint:"Yüksek güzel dağlar!"},
+    {word:"BAĞIRSAK", char:"🫀", hint:"Vücudumuzun içinde!"},
+    {word:"YOĞUN",    char:"😰", hint:"Çok fazla bir şey!"},
+  ],
+};
+
+// Auto-generate melodies
+function makeMelody(word) {
+  const scale = [261,294,330,349,392,440,494,523];
+  return [0,1,2,3].map(i => scale[word.charCodeAt(i % word.length) % scale.length]);
+}
+Object.keys(words).forEach(g => {
+  words[g].forEach(w => {
+    w.melody = makeMelody(w.word);
+    w.letter = g==='sh'?'Ş':g==='ch'?'Ç':'Ğ';
+  });
+});
+
+let currentGroup = 'sh', currentIdx = 0, streak = 0;
+let scores = {};
+Object.keys(words).forEach(g => { scores[g] = new Array(words[g].length).fill(0); });
+let audioCtx = null, listening = false, recognition = null;
+
+const groupColors = {sh:'done-sh',ch:'done-ch',gh:'done-gh'};
+const groupActive  = {sh:'active-sh',ch:'active-ch',gh:'active-gh'};
+
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function setGroup(g) {
+  currentGroup=g; currentIdx=0;
+  ['sh','ch','gh'].forEach(t=>{
+    document.getElementById('tab-'+t).className='tab'+(t===g?' '+groupActive[t]:'');
+  });
+  render();
+}
+
+function normalize(c) {
+  return c.toLowerCase()
+    .replace(/i̇/g,'i').replace(/ı/g,'i').replace(/İ/g,'i').replace(/I/g,'i')
+    .replace(/ğ/g,'ğ');
+}
+
+function render() {
+  const list=words[currentGroup], w=list[currentIdx];
+  document.getElementById('charBtn').textContent=w.char;
+
+  const disp=document.getElementById('wordDisplay');
+  disp.innerHTML='';
+  for(const c of w.word){
+    const s=document.createElement('span');
+    s.textContent=c;
+    if(normalize(c)===normalize(w.letter)) s.className='letter-'+currentGroup;
+    disp.appendChild(s);
+  }
+
+  document.getElementById('hintText').textContent=w.hint;
+  document.getElementById('micLabel').textContent=`"${w.word}" de bakalım!`;
+  const sc=scores[currentGroup][currentIdx];
+  document.getElementById('starsRow').textContent=sc>0?'⭐'.repeat(Math.min(sc,3)):'';
+  document.getElementById('micBtn').className='mic-btn';
+  document.getElementById('statusText').textContent='';
+  document.getElementById('statusText').className='status-text';
+
+  const enc=document.getElementById('encourageBar');
+  enc.textContent=sc>0?`Daha önce başardın! Tekrar dene! 🌟`:`Hazır mısın, ${CHILD}? 😊`;
+  enc.className='encourage-bar';
+
+  document.getElementById('levelPill').textContent=(currentIdx+1)+' / '+list.length;
+  buildProgress(); updateScore(); updateTabCounts(); updateStreak();
+}
+
+function buildProgress() {
+  const row=document.getElementById('progressRow');
+  row.innerHTML='';
+  words[currentGroup].forEach((_,i)=>{
+    const d=document.createElement('div');
+    let cls='dot';
+    if(i===currentIdx) cls+=' current';
+    else if(scores[currentGroup][i]>0) cls+=' '+groupColors[currentGroup];
+    d.className=cls; row.appendChild(d);
+  });
+}
+
+function updateScore() {
+  let total=0;
+  Object.keys(scores).forEach(g=>scores[g].forEach(s=>total+=s));
+  document.getElementById('totalScore').textContent=total+' ⭐';
+}
+
+function updateTabCounts() {
+  Object.keys(words).forEach(g=>{
+    const done=scores[g].filter(s=>s>0).length;
+    document.getElementById('tc-'+g).textContent=done+'/'+words[g].length;
+  });
+}
+
+function updateStreak() {
+  document.getElementById('streakBadge').className='streak-badge'+(streak>=3?' show':'');
+}
+
+function playMelody() {
+  const w=words[currentGroup][currentIdx];
+  try {
+    const ctx=getAudio();
+    const btn=document.getElementById('charBtn');
+    btn.classList.remove('wiggle'); void btn.offsetWidth; btn.classList.add('wiggle');
+    setTimeout(()=>btn.classList.remove('wiggle'),600);
+    w.melody.forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), gain=ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=ctx.currentTime+i*0.26;
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.2,t+0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.42);
+      osc.start(t); osc.stop(t+0.5);
+    });
+  } catch(e){}
+}
+
+function startListening() {
+  if(listening) return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noSpeechWarn').style.display='block';return;}
+  recognition=new SR();
+  recognition.lang='tr-TR';
+  recognition.interimResults=false;
+  recognition.maxAlternatives=8;
+  recognition.start();
+  listening=true;
+  document.getElementById('micBtn').className='mic-btn listening';
+  const enc=document.getElementById('encourageBar');
+  enc.textContent=`Söyle ${CHILD}! Dinliyorum 🎤`;
+  enc.className='encourage-bar listening';
+
+  recognition.onresult=(e)=>{
+    listening=false;
+    const alts=Array.from(e.results[0]).map(r=>r.transcript.toLowerCase().trim());
+    const target=words[currentGroup][currentIdx].word.toLowerCase();
+    if(alts.some(t=>checkMatch(t,target))) onSuccess(); else onRetry();
+  };
+  recognition.onerror=()=>{
+    listening=false;
+    document.getElementById('micBtn').className='mic-btn';
+    const enc=document.getElementById('encourageBar');
+    enc.textContent=`Biraz daha yüksek sesle söyle! 💪`;
+    enc.className='encourage-bar retry';
+  };
+  recognition.onend=()=>{listening=false;};
+}
+
+function checkMatch(heard,target){
+  const h=heard.replace(/\s+/g,''), t=target.replace(/\s+/g,'');
+  if(h===t) return true;
+  if(h.includes(t)||t.includes(h)) return true;
+  const thresh=t.length<=4?1:t.length<=6?2:3;
+  return levenshtein(h,t)<=thresh;
+}
+
+function levenshtein(a,b){
+  const m=a.length,n=b.length,dp=[];
+  for(let i=0;i<=m;i++){dp[i]=[i];}
+  for(let j=0;j<=n;j++){dp[0][j]=j;}
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function onSuccess(){
+  scores[currentGroup][currentIdx]=(scores[currentGroup][currentIdx]||0)+1;
+  streak++;
+  document.getElementById('micBtn').className='mic-btn success';
+  document.getElementById('starsRow').textContent='⭐'.repeat(Math.min(scores[currentGroup][currentIdx],3));
+  const enc=document.getElementById('encourageBar');
+  enc.textContent=encourageOk[Math.floor(Math.random()*encourageOk.length)];
+  enc.className='encourage-bar ok';
+  document.getElementById('statusText').textContent='Doğru! 🎉';
+  document.getElementById('statusText').className='status-text ok';
+  const btn=document.getElementById('charBtn');
+  btn.classList.remove('celebrate'); void btn.offsetWidth; btn.classList.add('celebrate');
+  buildProgress(); updateScore(); updateTabCounts(); updateStreak();
+  launchConfetti(); playSuccessSound(); checkAllDone();
+}
+
+function onRetry(){
+  streak=0;
+  document.getElementById('micBtn').className='mic-btn';
+  const enc=document.getElementById('encourageBar');
+  enc.textContent=encourageRetry[Math.floor(Math.random()*encourageRetry.length)];
+  enc.className='encourage-bar retry';
+  document.getElementById('statusText').textContent='Tekrar dene! 💪';
+  document.getElementById('statusText').className='status-text retry';
+  updateStreak();
+}
+
+function playSuccessSound(){
+  try{
+    const ctx=getAudio();
+    [523,659,784,1047].forEach((f,i)=>{
+      const osc=ctx.createOscillator(),g=ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.type='triangle'; osc.frequency.value=f;
+      const t=ctx.currentTime+i*0.11;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.18,t+0.04);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.28);
+      osc.start(t); osc.stop(t+0.32);
+    });
+  }catch(e){}
+}
+
+function checkAllDone(){
+  if(Object.keys(scores).every(g=>scores[g].every(s=>s>0)))
+    setTimeout(()=>document.getElementById('celebOverlay').classList.add('show'),900);
+}
+
+function restartGame(){
+  Object.keys(scores).forEach(g=>{scores[g]=new Array(words[g].length).fill(0);});
+  streak=0;
+  document.getElementById('celebOverlay').classList.remove('show');
+  setGroup('sh');
+}
+
+function nextWord(){
+  const list=words[currentGroup];
+  if(currentIdx<list.length-1){currentIdx++;render();}
+  else{
+    const gs=['sh','ch','gh'],gi=gs.indexOf(currentGroup);
+    if(gi<gs.length-1) setGroup(gs[gi+1]);
+    else{
+      const enc=document.getElementById('encourageBar');
+      enc.textContent=`Tüm kelimeleri bitirdin ${CHILD}! 🏆`;
+      enc.className='encourage-bar ok';
+    }
+  }
+}
+
+function prevWord(){
+  if(currentIdx>0){currentIdx--;render();}
+  else{
+    const gs=['sh','ch','gh'],gi=gs.indexOf(currentGroup);
+    if(gi>0){currentGroup=gs[gi-1];currentIdx=words[gs[gi-1]].length-1;setGroup(gs[gi-1]);}
+  }
+}
+
+// Confetti
+const canvas=document.getElementById('cc'),ctx2=canvas.getContext('2d');
+let pieces=[],animating=false;
+function launchConfetti(){
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const cols=['#ff8fab','#fb923c','#fde047','#4ade80','#60a5fa','#a78bfa','#f87171'];
+  for(let i=0;i<100;i++) pieces.push({
+    x:Math.random()*canvas.width,y:-10,
+    w:5+Math.random()*9,h:9+Math.random()*7,
+    color:cols[Math.floor(Math.random()*cols.length)],
+    rot:Math.random()*360,vx:(Math.random()-0.5)*5,
+    vy:2.5+Math.random()*4.5,vr:(Math.random()-0.5)*7,op:1
+  });
+  if(!animating) animate();
+}
+function animate(){
+  if(!pieces.length){animating=false;ctx2.clearRect(0,0,canvas.width,canvas.height);return;}
+  animating=true;
+  ctx2.clearRect(0,0,canvas.width,canvas.height);
+  pieces=pieces.filter(p=>p.op>0.04);
+  pieces.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.vy+=0.07;
+    if(p.y>canvas.height*0.75) p.op-=0.02;
+    ctx2.save();ctx2.globalAlpha=p.op;
+    ctx2.translate(p.x,p.y);ctx2.rotate(p.rot*Math.PI/180);
+    ctx2.fillStyle=p.color;ctx2.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    ctx2.restore();
+  });
+  requestAnimationFrame(animate);
+}
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+
+render();
+</script>
+</body>
+</html>
